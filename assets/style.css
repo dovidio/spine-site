@@ -1,0 +1,389 @@
+/* Spine — spine.umberto.xyz
+   Extends the app's world: black ground, half-point hairlines, one grease-pencil red,
+   silver ink. Helvetica Neue cannot be shipped on the web, so the page self-hosts Arimo,
+   a metrically compatible grotesque; the character lives in the ground and the rules. */
+
+@font-face {
+  font-family: "Arimo";
+  src: url("/assets/fonts/arimo-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Arimo";
+  src: url("/assets/fonts/arimo-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --board: #0b0b0b;
+  --panel: #121212;
+  --ink: #ededed;
+  --muted: #8a8a8a;
+  --signal: #e8563f;
+  --rule: rgba(237, 237, 237, 0.13);
+  --rule-strong: rgba(237, 237, 237, 0.22);
+  --hair: 0.5px;
+  --gutter: clamp(20px, 5vw, 96px);
+  --measure: 34rem;
+}
+
+* { box-sizing: border-box; }
+
+/* an image's width attribute is its intrinsic size; without this a 1040px capture
+   sets the min-content width of its grid column and the phone layout overflows. */
+img { display: block; max-width: 100%; height: auto; }
+
+html { background: var(--board); }
+
+body {
+  margin: 0;
+  background: var(--board);
+  color: var(--ink);
+  font: 400 17px/1.55 "Arimo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--signal); color: var(--board); }
+
+a { color: var(--ink); text-decoration: none; }
+a:hover { color: var(--signal); }
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--board);
+  padding: 10px 16px;
+  z-index: 10;
+}
+.skip:focus { left: 12px; top: 12px; }
+
+/* ---- the meter: scroll position as the app's storage meter ---- */
+.meter {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--hair);
+  background: var(--rule);
+  z-index: 6;
+}
+.meter i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--signal);
+}
+
+/* ---- header ---- */
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 26px var(--gutter) 0;
+  position: relative;
+  z-index: 5;
+}
+.word {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+.word b { color: var(--signal); font-weight: 700; }
+nav.top a {
+  font-size: 14px;
+  color: var(--muted);
+  margin-left: 26px;
+}
+nav.top a:hover { color: var(--ink); }
+
+/* ---- the plate: viewport one ---- */
+.plate-hero {
+  position: relative;
+  min-height: calc(100svh - 52px);
+  padding: 0 var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 46%);
+  grid-template-areas: "copy shot" "ledger shot";
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  column-gap: clamp(24px, 4vw, 64px);
+  overflow: hidden;
+}
+.copy { grid-area: copy; }
+.hero-shot { grid-area: shot; }
+.ledger { grid-area: ledger; }
+.copy {
+  padding-top: clamp(56px, 12vh, 132px);
+  max-width: 40rem;
+}
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+h1 {
+  margin: 20px 0 0;
+  font-size: clamp(40px, 5.4vw, 78px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+h1 em { font-style: normal; color: var(--signal); }
+.lede {
+  margin: 26px 0 0;
+  font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+/* the ledger: one fact per line, signed the way a terminal signs one decision */
+.ledger {
+  margin: clamp(36px, 7vh, 78px) 0 0;
+  border-top: var(--hair) solid var(--rule-strong);
+  max-width: 40rem;
+}
+.ledger div {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 18px;
+  padding: 13px 0;
+  border-bottom: var(--hair) solid var(--rule);
+  font-size: 15px;
+  color: var(--muted);
+}
+.ledger dt {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+.ledger dd { margin: 0; text-wrap: pretty; }
+
+/* the capture, cropped by the viewport floor */
+.hero-shot {
+  position: relative;
+  justify-self: end;
+  width: min(520px, 100%);
+  margin-top: clamp(40px, 8vh, 96px);
+  border: var(--hair) solid var(--rule-strong);
+  border-radius: 44px;
+  overflow: hidden;
+  box-shadow: none;
+  translate: 0 0;
+  will-change: transform;
+}
+.hero-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.hero-shot::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+}
+
+/* ---- sections ---- */
+main { display: block; }
+
+.step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 42%);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: center;
+  padding: clamp(56px, 9vh, 104px) var(--gutter);
+  border-top: var(--hair) solid var(--rule);
+}
+.step:nth-of-type(even) { grid-template-columns: minmax(280px, 42%) minmax(0, 1fr); }
+.step:nth-of-type(even) .step-copy { order: 2; }
+.no {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
+}
+h2 {
+  margin: 14px 0 0;
+  font-size: clamp(26px, 2.6vw, 38px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  max-width: 26rem;
+}
+.step p {
+  margin: 16px 0 0;
+  color: var(--muted);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+.step-shot {
+  justify-self: end;
+  width: min(420px, 100%);
+  border: var(--hair) solid var(--rule-strong);
+  border-radius: 30px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+/* a detail cropped from a real screen, never the whole phone stretched to fit */
+.step-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+.step:nth-of-type(even) .step-shot { justify-self: start; }
+
+/* the closed list: what it does not do */
+.not {
+  padding: clamp(56px, 9vh, 104px) var(--gutter);
+  border-top: var(--hair) solid var(--rule);
+}
+.not ul {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  max-width: 52rem;
+}
+.not li {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 18px;
+  padding: 13px 0;
+  border-top: var(--hair) solid var(--rule);
+  font-size: 15px;
+  color: var(--muted);
+}
+.not li s {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding-top: 2px;
+}
+
+.status {
+  padding: clamp(48px, 8vh, 88px) var(--gutter);
+  border-top: var(--hair) solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 40px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.status p { margin: 0; color: var(--muted); max-width: 34rem; }
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--signal);
+  margin-right: 10px;
+  vertical-align: 1px;
+}
+
+footer {
+  border-top: var(--hair) solid var(--rule);
+  padding: 28px var(--gutter) 44px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 32px;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+}
+footer a { color: var(--muted); }
+footer a:hover { color: var(--ink); }
+
+/* ---- prose pages (support, privacy, 404) ---- */
+.doc {
+  padding: clamp(48px, 9vh, 104px) var(--gutter) 96px;
+  max-width: 46rem;
+}
+.doc h1 {
+  font-size: clamp(34px, 4vw, 54px);
+  letter-spacing: -0.03em;
+}
+.doc h2 {
+  font-size: clamp(20px, 2vw, 24px);
+  margin-top: 44px;
+  letter-spacing: -0.01em;
+}
+.doc p, .doc li { color: var(--muted); }
+.doc p { margin: 14px 0 0; }
+.doc ul { margin: 14px 0 0; padding-left: 1.1em; }
+.doc li { margin: 8px 0; }
+.doc strong { color: var(--ink); font-weight: 700; }
+.doc .meta {
+  margin-top: 10px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.doc a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--rule-strong); }
+.doc a:hover { color: var(--signal); text-decoration-color: var(--signal); }
+
+/* ---- responsive ---- */
+/* the passenger gets a band of its own: no capture can show two phones */
+.band {
+  padding: clamp(48px, 8vh, 96px) var(--gutter);
+  border-top: var(--hair) solid var(--rule);
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 48px);
+  align-items: start;
+}
+.band .no { padding-top: 6px; }
+.band p { margin: 0; color: var(--muted); max-width: 44rem; text-wrap: pretty; }
+.band strong { color: var(--ink); font-weight: 700; }
+
+@media (max-width: 900px) {
+  .plate-hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "copy" "shot" "ledger";
+    grid-template-rows: auto auto auto;
+    min-height: 0;
+  }
+  .copy { padding-top: 48px; }
+  .hero-shot {
+    justify-self: stretch;
+    width: 100%;
+    margin-top: 40px;
+    border-radius: 30px;
+    max-height: 62svh;
+    overflow: hidden;
+  }
+  .hero-shot img { width: 100%; }
+  .step, .step:nth-of-type(even) { grid-template-columns: minmax(0, 1fr); }
+  .step:nth-of-type(even) .step-copy { order: 0; }
+  .step-shot, .step:nth-of-type(even) .step-shot { justify-self: stretch; width: 100%; }
+  .ledger div, .not li, .band { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shot { translate: none !important; }
+}
+
+@media (prefers-contrast: more) {
+  :root { --rule: rgba(237,237,237,0.3); --rule-strong: rgba(237,237,237,0.5); --muted: #b4b4b4; }
+}

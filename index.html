@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spine — your music, played from iCloud Drive</title>
+<meta name="description" content="Spine plays the music library you already keep in iCloud Drive. No uploads, no server, no account. The phone only keeps what you are listening to.">
+<meta name="theme-color" content="#0b0b0b">
+<meta property="og:title" content="Spine — your music, played from iCloud Drive">
+<meta property="og:description" content="No uploads. No server. The library stays where it is; the phone only keeps what you are playing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://spine.dovguitar.com/">
+<meta property="og:image" content="https://spine.dovguitar.com/assets/shots/library.webp">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="meter" aria-hidden="true"><i id="meter"></i></div>
+
+<header class="top">
+  <a class="word" href="/">Spine<b>.</b></a>
+  <nav class="top" aria-label="Site">
+    <a href="#how">How it works</a>
+    <a href="/support.html">Support</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="plate-hero">
+    <div class="copy">
+      <p class="eyebrow">iCloud Music Player</p>
+      <h1>Your music, played from <em>iCloud Drive</em>.</h1>
+      <p class="lede">No uploads. No server. The library stays where it already is, and the phone keeps only what you are listening to.</p>
+
+    </div>
+
+    <div class="hero-shot" id="plate">
+      <img src="/assets/shots/library.webp" width="1040" height="2251"
+           alt="Spine's library screen: a storage figure of 12 MB on device against a 1.0 GB budget, and a shelf of albums ordered by artist.">
+    </div>
+
+    <dl class="ledger">
+      <div><dt>Your folder</dt><dd>Point Spine at it once. Nothing is copied, moved, renamed or uploaded.</dd></div>
+      <div><dt>Your budget</dt><dd>You choose how much the phone may keep. Past it, the least recently played downloads go.</dd></div>
+      <div><dt>The first second</dt><dd>A file arrives and playback starts. You do not wait for an album to finish downloading.</dd></div>
+      <div><dt>The tags</dt><dd>Title, artist, album, disc and track come from the file. Artwork comes from the folder or the audio itself.</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <article class="step">
+      <div class="step-copy">
+        <p class="no">01 — The album</p>
+        <h2>An album opens as a record, not a folder of files.</h2>
+        <p>Disc and track numbers order the songs the way they were sequenced. One button plays the album from the top and keeps it in the queue. Downloading an album is a decision you make, not a side effect.</p>
+      </div>
+      <div class="step-shot">
+        <img src="/assets/shots/album.webp" width="780" height="975" loading="lazy"
+             alt="An album screen: sleeve, title, four songs, a red Play button and a Remove download action.">
+      </div>
+    </article>
+
+    <article class="step">
+      <div class="step-copy">
+        <p class="no">02 — The player</p>
+        <h2>The file that is playing is the only one that has to be there.</h2>
+        <p>Playback begins as soon as the first bytes land. Eviction never touches the song in your ears or the few after it, and the sleeve carries the progress so the bar does not need a second line.</p>
+      </div>
+      <div class="step-shot">
+        <img src="/assets/shots/now-playing.webp" width="780" height="975" loading="lazy"
+             alt="The full player: blurred sleeve, song title, scrubber and transport controls.">
+      </div>
+    </article>
+
+    <article class="step">
+      <div class="step-copy">
+        <p class="no">03 — The queue</p>
+        <h2>Songs, not albums. The music does not stop at the end of a record.</h2>
+        <p>When the queue runs out the player carries on with songs from anywhere in the library, preferring the ones already on the phone. Shuffle and repeat are remembered. Any song can be sent next or last from its own menu.</p>
+      </div>
+      <div class="step-shot">
+        <img src="/assets/shots/player-bar.webp" width="780" height="975" loading="lazy"
+             alt="The library with a song playing: the floating player shows the sleeve, the song and its progress.">
+      </div>
+    </article>
+
+  </section>
+
+  <section class="band">
+    <p class="no">04 — The passenger</p>
+    <p><strong>Another phone can change what is playing, without a server in the middle.</strong> One phone lets a nearby phone in, once. It runs directly between the two devices, encrypted, so the queue, the cache and the listening log are never a special case — the guest presses the same buttons the host does.</p>
+  </section>
+
+  <section class="not">
+    <p class="no">What it does not do</p>
+    <ul>
+      <li><s>No upload</s>Your files never leave the folder you chose, and nothing is transcoded.</li>
+      <li><s>No server</s>No domain, no machine to keep awake, no second copy of your collection.</li>
+      <li><s>No account</s>No sign-in, no profile, no library in someone else's database.</li>
+      <li><s>No telemetry</s>Listening stays on the phone. The site you are reading has no analytics either.</li>
+    </ul>
+  </section>
+
+  <section class="status">
+    <p><span class="dot" aria-hidden="true"></span><strong>In TestFlight.</strong> Spine runs on iPhone with iOS 18 or later.</p>
+    <p>FLAC, WAV, AIFF, ALAC, M4A, MP3 and AAC — in any subfolder.</p>
+  </section>
+</main>
+
+<footer>
+  <span>Spine — iCloud Music Player</span>
+  <span>
+    <a href="/support.html">Support</a> ·
+    <a href="/privacy.html">Privacy</a> ·
+    <a href="https://github.com/dovidio/spine-site">Source</a>
+  </span>
+</footer>
+
+<script src="/assets/app.js" defer></script>
+</body>
+</html>
