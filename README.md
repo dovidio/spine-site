@@ -15,26 +15,24 @@ assets/shots/     real captures of the running app
 
 ## Deploy
 
-Cloudflare Pages, direct upload:
+Live at **https://spine.dovguitar.com** (Cloudflare, static assets on Workers — the current
+form of Pages). No build step; the repository root is the site.
 
 ```sh
-npx wrangler@latest pages deploy . --project-name spine-site --branch main
+npx wrangler@latest deploy
 ```
 
-First time only, if the project does not exist yet:
+`wrangler.jsonc` names the worker and points its assets at `./`; `.assetsignore` keeps the
+repository's own files out of the upload. `_headers` (CSP, caching, no-sniff) is applied by
+the platform.
 
-```sh
-npx wrangler@latest pages project create spine-site --production-branch main
-```
+Custom domain: `spine.dovguitar.com` is attached as a Workers custom domain on the
+`dovguitar.com` zone, which also serves the main site — the subdomain is additive.
 
-Then in the Cloudflare dashboard → Pages → `spine-site` → Custom domains → add
-`spine.dovguitar.com`. The zone is already on Cloudflare, so it creates the CNAME itself;
-`dovguitar.com` itself is untouched.
+## Pages
 
-## Or: connect the repository
-
-Pages → Create → Connect to Git → pick this repo → framework preset "None", build command
-empty, output directory `/`. Every push to `main` then deploys.
+`/support` and `/privacy` are the canonical URLs, because the platform redirects
+`*.html` to the extensionless path. The App Store listing uses those two.
 
 ## Facts
 
