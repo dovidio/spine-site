@@ -19,13 +19,15 @@
   </nav>
 </header>
 
-<main id="main" class="doc">
+<main id="main" class="doc doc-split">
+<nav class="doc-index" aria-label="On this page"><p class="meta">On this page</p><ul><li><a href="#what-stays-on-your-phone">What stays on your phone</a></li><li><a href="#what-leaves-your-phone">What leaves your phone</a></li><li><a href="#your-library-folder">Your library folder</a></li><li><a href="#purchases-and-the-app-store">Purchases and the App Store</a></li><li><a href="#testflight">TestFlight</a></li><li><a href="#this-website">This website</a></li><li><a href="#children">Children</a></li><li><a href="#changes-and-contact">Changes and contact</a></li></ul></nav>
+<div class="doc-body">
   <h1>Privacy</h1>
   <p class="meta">Effective 16 November 2026</p>
 
   <p><strong>Spine collects nothing, and there is no server to collect it.</strong> There is no account, no sign-in, no analytics, no advertising, and no third-party SDK. The app does not talk to us or to anyone else.</p>
 
-  <h2>What stays on your phone</h2>
+  <h2 id="what-stays-on-your-phone">What stays on your phone</h2>
   <ul>
     <li>Which folder you chose, remembered as a bookmark so the app can open it again.</li>
     <li>A snapshot of the folder's file names, sizes and dates, so the library appears instantly at launch.</li>
@@ -35,29 +37,30 @@
   </ul>
   <p>All of it lives in the app's container on the device (a single local database). Deleting the app deletes all of it.</p>
 
-  <h2>What leaves your phone</h2>
+  <h2 id="what-leaves-your-phone">What leaves your phone</h2>
   <ul>
     <li><strong>Nothing that belongs to you.</strong> Playing a track reads it from iCloud Drive through Apple's file provider; that transfer is between your phone and your own iCloud account, exactly like opening a document.</li>
     <li>Passenger control talks directly to another phone on the same local network, encrypted, and only after you approve it. It does not use the internet.</li>
   </ul>
 
-  <h2>Your library folder</h2>
+  <h2 id="your-library-folder">Your library folder</h2>
   <p>Spine asks for access to the one folder you pick, and keeps that access until you choose a different folder or delete the app. It never writes to your folder: no files are added, renamed, moved or edited. The one exception is the sample library, which is written inside the app's own storage and can be deleted with it.</p>
 
-  <h2>Purchases and the App Store</h2>
+  <h2 id="purchases-and-the-app-store">Purchases and the App Store</h2>
   <p>If a paid version is offered, the purchase is handled by Apple. We would receive Apple's sale report, which is aggregated and does not identify you.</p>
 
-  <h2>TestFlight</h2>
+  <h2 id="testflight">TestFlight</h2>
   <p>During the beta, Apple may collect crash logs and feedback you choose to send through TestFlight. That is Apple's service, governed by Apple's privacy policy; we see the crash reports only if you opt in to share them.</p>
 
-  <h2>This website</h2>
+  <h2 id="this-website">This website</h2>
   <p>This site is a static page. It sets no cookies, loads no fonts or scripts from other domains, and runs no analytics. The server that hosts it (Cloudflare Pages) keeps standard request logs for security and abuse prevention; we do not build profiles from them.</p>
 
-  <h2>Children</h2>
+  <h2 id="children">Children</h2>
   <p>Spine is a music player and is not directed at children. It collects no personal information from anyone.</p>
 
-  <h2>Changes and contact</h2>
+  <h2 id="changes-and-contact">Changes and contact</h2>
   <p>If this policy changes, the date above changes with it. Questions or corrections: open an issue on the <a href="https://github.com/dovidio/spine-site/issues">public tracker</a>.</p>
+</div>
 </main>
 
 <footer>

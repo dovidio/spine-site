@@ -343,6 +343,29 @@ footer a:hover { color: var(--ink); }
 .doc a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--rule-strong); }
 .doc a:hover { color: var(--signal); text-decoration-color: var(--signal); }
 
+/* prose pages: the questions down the side, the answers in a reading column */
+.doc-split {
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 46rem);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: start;
+}
+.doc-index { position: sticky; top: 40px; }
+.doc-index ul { list-style: none; margin: 16px 0 0; padding: 0; }
+.doc-index li { margin: 0; }
+.doc-index a {
+  display: block;
+  padding: 7px 0;
+  font-size: 14px;
+  color: var(--muted);
+  border-top: var(--hair) solid var(--rule);
+  text-decoration: none;
+}
+.doc-index a:hover { color: var(--signal); }
+.doc-body h1 { margin-top: 0; }
+.doc-body > :first-child { margin-top: 0; }
+
 /* ---- responsive ---- */
 /* the passenger gets a band of its own: no capture can show two phones */
 .band {
@@ -378,6 +401,8 @@ footer a:hover { color: var(--ink); }
   .step:nth-of-type(even) .step-copy { order: 0; }
   .step-shot, .step:nth-of-type(even) .step-shot { justify-self: stretch; width: 100%; }
   .ledger div, .not li, .band { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .doc-split { grid-template-columns: minmax(0, 1fr); }
+  .doc-index { position: static; order: -1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

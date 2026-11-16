@@ -19,43 +19,46 @@
   </nav>
 </header>
 
-<main id="main" class="doc">
+<main id="main" class="doc doc-split">
+<nav class="doc-index" aria-label="On this page"><p class="meta">On this page</p><ul><li><a href="#where-does-my-music-go">Where does my music go?</a></li><li><a href="#how-do-i-start">How do I start?</a></li><li><a href="#which-files-can-it-play">Which files can it play?</a></li><li><a href="#why-is-it-downloading-things">Why is it downloading things?</a></li><li><a href="#what-does-the-storage-budget-do">What does the storage budget do?</a></li><li><a href="#can-i-get-the-space-back-immediately">Can I get the space back immediately?</a></li><li><a href="#does-it-work-without-a-signal">Does it work without a signal?</a></li><li><a href="#what-is-passenger-control">What is passenger control?</a></li><li><a href="#how-do-i-report-a-problem">How do I report a problem?</a></li><li><a href="#where-is-the-beta">Where is the beta?</a></li></ul></nav>
+<div class="doc-body">
   <h1>Support</h1>
   <p class="meta">iCloud Music Player</p>
 
-  <h2>Where does my music go?</h2>
+  <h2 id="where-does-my-music-go">Where does my music go?</h2>
   <p>Nowhere. Spine plays the folder you choose in iCloud Drive, in place. It does not copy files into the app, rename them, move them, upload them, or send them anywhere. If you delete the app, your library is exactly as you left it — the app's own downloads are the only thing that goes.</p>
 
-  <h2>How do I start?</h2>
+  <h2 id="how-do-i-start">How do I start?</h2>
   <ul>
     <li>Put your music in a folder in iCloud Drive — artist and album folders work, and so do loose files.</li>
     <li>Open Spine and choose that folder once. The choice is remembered.</li>
     <li>No library yet? "Try a sample library" writes two small albums into the app's own folder so you can see how it behaves.</li>
   </ul>
 
-  <h2>Which files can it play?</h2>
+  <h2 id="which-files-can-it-play">Which files can it play?</h2>
   <p>FLAC, WAV, AIFF, ALAC, M4A, MP3 and AAC, in any subfolder. Anything else is listed as unplayable rather than silently skipped, so a folder that shows nothing is telling you the truth.</p>
 
-  <h2>Why is it downloading things?</h2>
+  <h2 id="why-is-it-downloading-things">Why is it downloading things?</h2>
   <p>A file in iCloud Drive that has never been opened is a placeholder: it has a name and a size, not audio. Spine fetches a track when you press play, and stops there. It also fetches the next few songs ahead of time when your settings allow it.</p>
 
-  <h2>What does the storage budget do?</h2>
+  <h2 id="what-does-the-storage-budget-do">What does the storage budget do?</h2>
   <p>It is the ceiling you set for what Spine may keep on the phone. When the downloads pass it, the least recently played files are evicted from the device — the originals stay in iCloud Drive and come back the next time you play them. The song you are listening to, and the ones queued behind it, are never evicted.</p>
 
-  <h2>Can I get the space back immediately?</h2>
+  <h2 id="can-i-get-the-space-back-immediately">Can I get the space back immediately?</h2>
   <p>Settings → "Remove all downloads". Every file Spine fetched leaves the phone; the files in your folder are untouched.</p>
 
-  <h2>Does it work without a signal?</h2>
+  <h2 id="does-it-work-without-a-signal">Does it work without a signal?</h2>
   <p>For anything already downloaded, yes. For anything still in iCloud Drive, no — the file has to arrive first. If you are about to be offline, download the albums you want while you have a connection.</p>
 
-  <h2>What is passenger control?</h2>
+  <h2 id="what-is-passenger-control">What is passenger control?</h2>
   <p>One phone can let a nearby phone change what is playing. It runs directly between the two devices, encrypted, with no server and no account. The host approves the guest once and can forget it later in Settings.</p>
 
-  <h2>How do I report a problem?</h2>
+  <h2 id="how-do-i-report-a-problem">How do I report a problem?</h2>
   <p>Open an issue on the <a href="https://github.com/dovidio/spine-site/issues">public tracker</a>. Useful details: the iPhone model, the iOS version, what you expected, what happened, and — if it is about a file — the format and roughly how large it is. Never attach music you do not own the rights to.</p>
 
-  <h2>Where is the beta?</h2>
+  <h2 id="where-is-the-beta">Where is the beta?</h2>
   <p>Spine is in TestFlight. Public link and App Store release are announced here first.</p>
+</div>
 </main>
 
 <footer>
