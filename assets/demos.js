@@ -23,73 +23,79 @@
     figure.appendChild(make('figcaption', 'cap', text));
   }
 
-  // 01 — the budget. A fixed grid of rows; only their contents change, so nothing on the
-  // page moves while it runs. The bottom row is marked evicted, then everything above it
-  // takes the place of the row above, and a new song arrives at the top.
+  // 01 — the budget. Songs are different sizes, so the number moves: the bar climbs while
+  // songs arrive, drops when the oldest is evicted, and the evicted row says so.
   function budget(figure) {
     figure.classList.add('budget-demo');
-    var counter = head(figure, 'Phone storage', '448 MB of 448 MB');
+    var counter = head(figure, 'Phone storage', '');
+
+    var bar = make('div', 'capacity');
+    var fill = make('i');
+    bar.appendChild(fill);
+    figure.appendChild(bar);
+    var budgetNote = make('div', 'budgetline', 'budget 448 MB');
+    figure.appendChild(budgetNote);
+
     var slots = make('div', 'slots');
     figure.appendChild(slots);
-    figure.appendChild(make('div', 'budgetline', 'budget'));
-    caption(figure, 'Every play adds a song. When the budget is full, the oldest one leaves.');
+    caption(figure, 'Songs are different sizes. When the next one would pass the budget, the oldest leaves.');
 
-    var cap = 7, size = 64, seq = 0;
-    var rows = [];
+    var budget = 448;
+    var sizes = [96, 54, 128, 72, 41, 88, 63, 110, 47];
+    var next = 0, seq = 0, onPhone = [];   // onPhone[0] is the newest
 
-    for (var i = 0; i < cap; i++) {
-      var row = make('div', 'slot');
+    function total() { return onPhone.reduce(function (a, s) { return a + s.size; }, 0); }
+
+    function paint() {
+      var used = total();
+      counter.textContent = used + ' MB of ' + budget + ' MB';
+      fill.style.width = Math.min(used / budget, 1) * 100 + '%';
+      onPhone.forEach(function (item, i) {
+        item.row.classList.toggle('playing', i === 0);
+        item.row.querySelector('.state').textContent = i === 0 ? 'playing' : 'on the phone';
+      });
+    }
+
+    function makeRow(item) {
+      var row = make('div', 'slot enter');
       row.appendChild(make('div', 'mark'));
       var text = make('div', 'slotText');
       var name = make('div', 'name');
+      name.style.width = (24 + ((item.seq * 23) % 56)) + '%';
       text.appendChild(name);
-      text.appendChild(make('div', 'state', ''));
+      text.appendChild(make('div', 'state', 'playing'));
       row.appendChild(text);
-      row.appendChild(make('span', 'size', size + ' MB'));
-      slots.appendChild(row);
-      rows.push(row);
+      row.appendChild(make('span', 'size', item.size + ' MB'));
+      slots.insertBefore(row, slots.firstChild);
+      setTimeout(function () { row.classList.remove('enter'); }, 320);
+      item.row = row;
+      return row;
     }
 
-    function fill(row, width, state, sizeText, playing) {
-      row.querySelector('.name').style.width = width + '%';
-      row.querySelector('.state').textContent = state;
-      row.querySelector('.size').textContent = sizeText;
-      row.classList.toggle('playing', !!playing);
+    function arrive() {
+      var item = { size: sizes[next++ % sizes.length], seq: seq++ };
+
+      // make room first: the oldest leaves until the new song fits
+      while (onPhone.length && total() + item.size > budget) {
+        var victim = onPhone.pop();
+        victim.row.classList.add('evicting');
+        victim.row.querySelector('.state').textContent = 'evicted';
+        victim.row.querySelector('.size').textContent = '−' + victim.size + ' MB';
+        (function (node) {
+          setTimeout(function () { if (node.parentNode) node.parentNode.removeChild(node); }, 480);
+        })(victim.row);
+      }
+
+      onPhone.unshift(item);
+      makeRow(item);
+      paint();
     }
 
-    // start full: top row playing, the rest waiting
-    rows.forEach(function (row, i) {
-      fill(row, 34 + ((i * 19) % 50), i === 0 ? 'playing' : 'on the phone', size + ' MB', i === 0);
-    });
-
-    function copy(from, to) {
-      // only the top row is playing; everything below it is on the phone
-      fill(to,
-        parseFloat(from.querySelector('.name').style.width),
-        from.querySelector('.state').textContent === 'playing' ? 'on the phone' : from.querySelector('.state').textContent,
-        from.querySelector('.size').textContent,
-        false);
-    }
-
-    function tick() {
-      var last = rows[rows.length - 1];
-      last.classList.add('evicting');
-      fill(last, 18, 'evicted', '', false);
-
-      setTimeout(function () {
-        for (var i = rows.length - 1; i > 0; i--) copy(rows[i - 1], rows[i]);
-        seq += 1;
-        fill(rows[0], 34 + ((seq * 19) % 50), 'playing', size + ' MB', true);
-        rows[0].classList.add('enter');
-        setTimeout(function () { rows[0].classList.remove('enter'); }, 320);
-        last.classList.remove('evicting');
-        counter.textContent = (cap * size) + ' MB of 448 MB';
-      }, 420);
-    }
+    for (var i = 0; i < 5; i++) arrive();
 
     var timer = null;
     return {
-      start: function () { if (!timer) timer = setInterval(tick, 1500); },
+      start: function () { if (!timer) timer = setInterval(arrive, 1600); },
       stop: function () { clearInterval(timer); timer = null; }
     };
   }

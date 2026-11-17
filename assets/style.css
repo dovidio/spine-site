@@ -377,12 +377,29 @@ footer a:hover { color: var(--ink); }
   flex: none;
 }
 
-/* 01 — a fixed stack whose text ticks upward */
+/* 01 — a capacity bar and a list that changes contents, not geometry */
+.capacity {
+  flex: none;
+  height: 8px;
+  margin-top: 12px;
+  background: rgba(237,237,237,0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.capacity i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--signal);
+  border-radius: 2px;
+  transition: width 420ms cubic-bezier(.4,0,.2,1);
+}
 .slots {
-  margin-top: 8px;
+  margin-top: 10px;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .slot {
   display: grid;
