@@ -47,10 +47,10 @@
         <h2>Built for a phone that is already full.</h2>
         <p>Set a ceiling. Oldest plays leave first. The song playing, and the few behind it, never leave.</p>
       </div>
-      <div class="step-shot">
-        <img src="/assets/shots/settings.webp" width="780" height="600"
-             alt="Settings: a storage budget of 12 MB of 1.0 GB, with a slider and a Remove all downloads action.">
-      </div>
+      <figure class="demo" data-demo="budget" role="img"
+              aria-label="A loop of songs arriving on the phone: the list fills to a marked budget, and the oldest song leaves as a new one arrives.">
+        <figcaption class="sr-only">Each play adds a song at the top. When the budget line is reached, the oldest song is evicted first.</figcaption>
+      </figure>
     </article>
 
     <article class="step">
@@ -59,10 +59,10 @@
         <h2>Point at it once.</h2>
         <p>Spine reads names, sizes and tags. No audio. A song is fetched when you press play.</p>
       </div>
-      <div class="step-shot">
-        <img src="/assets/shots/album.webp" width="780" height="1000"
-             alt="An album read from the folder: title, artist, year and songs in track order, before any audio has been fetched.">
-      </div>
+      <figure class="demo" data-demo="folder" role="img"
+              aria-label="A loop of the folder being read: song names and sizes appear, then only the played song is fetched, its badge filling in.">
+        <figcaption class="sr-only">Spine reads names, sizes and tags without audio. A song is fetched when it is played.</figcaption>
+      </figure>
     </article>
 
     <article class="step">
@@ -71,10 +71,10 @@
         <h2>Let the back seat pick the next song.</h2>
         <p>A passenger opens Spine. You approve them once. They get the queue and the transport, phone to phone, encrypted.</p>
       </div>
-      <div class="step-shot">
-        <img src="/assets/shots/passenger.webp" width="780" height="347"
-             alt="The Remote screen on a passenger's phone, looking for nearby players to control.">
-      </div>
+      <figure class="demo" data-demo="passenger" role="img"
+              aria-label="A loop of two phones: the passenger asks to be approved, a signal passes directly between them, and the next song travels back from the passenger's phone.">
+        <figcaption class="sr-only">One phone approves the other once. The two talk directly, encrypted, with no server between them.</figcaption>
+      </figure>
     </article>
   </section>
 </main>
@@ -89,5 +89,6 @@
 </footer>
 
 <script src="/assets/app.js" defer></script>
+<script src="/assets/demos.js" defer></script>
 </body>
 </html>
