@@ -330,22 +330,22 @@ footer a:hover { color: var(--ink); }
   :root { --rule: rgba(237,237,237,0.3); --rule-strong: rgba(237,237,237,0.5); --muted: #b4b4b4; }
 }
 
-/* ---- demonstrations: the mechanism, drawn, labelled, moving ---- */
+/* ---- demonstrations: fixed boxes, contents tick, nothing reflows ---- */
 .demo {
   margin: 0;
   justify-self: end;
   width: min(470px, 100%);
+  height: 372px;                     /* fixed: the page never shifts while a loop runs */
   border: var(--hair) solid var(--rule-strong);
   border-radius: 26px;
   background: var(--panel);
-  padding: 18px 18px 14px;
+  padding: 18px;
   overflow: hidden;
   position: relative;
   font-size: 12px;
   color: var(--muted);
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 .step:nth-of-type(even) .demo { justify-self: start; }
 
@@ -359,6 +359,7 @@ footer a:hover { color: var(--ink); }
   color: var(--ink);
   border-bottom: var(--hair) solid var(--rule-strong);
   padding-bottom: 9px;
+  flex: none;
 }
 .demo .head b {
   color: var(--signal);
@@ -367,45 +368,70 @@ footer a:hover { color: var(--ink); }
   font-variant-numeric: tabular-nums;
 }
 .demo .cap {
-  margin-top: 12px;
-  padding-top: 9px;
+  margin-top: auto;
+  padding-top: 10px;
   border-top: var(--hair) solid var(--rule);
   font-size: 12.5px;
   line-height: 1.45;
   color: var(--muted);
+  flex: none;
 }
 
-/* 01 — a stack that fills and pushes its oldest row out */
-.slots { margin-top: 6px; min-height: 174px; }
+/* 01 — a fixed stack whose text ticks upward */
+.slots {
+  margin-top: 8px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
 .slot {
   display: grid;
   grid-template-columns: 16px 1fr auto;
   align-items: center;
   gap: 10px;
-  height: 29px;
+  flex: 1 1 0;
+  min-height: 0;
   border-bottom: var(--hair) solid var(--rule);
-  transition: opacity 260ms ease, height 300ms ease, transform 300ms ease;
 }
-.slot .mark { width: 16px; height: 16px; border-radius: 3px; background: rgba(237,237,237,0.16); }
-.slot .slotText { min-width: 0; }
-.slot .name { height: 5px; border-radius: 2px; background: rgba(237,237,237,0.42); margin-bottom: 4px; }
-.slot .state { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.slot .size { font-size: 11px; font-variant-numeric: tabular-nums; }
-.slot.fresh { opacity: 0; transform: translateY(-8px); }
-.slot.fresh .mark { background: var(--signal); }
+.slot .mark {
+  width: 16px; height: 16px; border-radius: 3px;
+  background: rgba(237,237,237,0.16);
+  transition: background 240ms ease;
+}
+.slot .slotText { min-width: 0; overflow: hidden; }
+.slot .name {
+  height: 5px; border-radius: 2px;
+  background: rgba(237,237,237,0.42);
+  margin-bottom: 5px;
+  transition: width 320ms ease, background 240ms ease;
+}
+.slot .state {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 240ms ease;
+  white-space: nowrap;
+}
+.slot .size {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  transition: color 240ms ease;
+}
 .slot.playing .mark { background: var(--signal); }
 .slot.playing .state { color: var(--signal); }
-.slot.out { opacity: 0; height: 0; }
-.slot.out .state { color: var(--signal); }
+.slot.enter .name { background: rgba(237,237,237,0.75); }
+.slot.evicting { opacity: 0.5; }
+.slot.evicting .state { color: var(--signal); }
 .budgetline {
-  position: relative;
-  height: 20px;
+  flex: none;
+  margin-top: 8px;
   border-top: var(--hair) solid var(--signal);
+  padding-top: 6px;
   font-size: 10.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--signal);
-  padding-top: 5px;
 }
 
 /* 02 — names first, audio only for what is played */
@@ -414,13 +440,14 @@ footer a:hover { color: var(--ink); }
   grid-template-columns: 20px 1fr auto;
   align-items: center;
   gap: 10px;
-  height: 34px;
+  flex: 1 1 0;
+  min-height: 0;
   border-bottom: var(--hair) solid var(--rule);
-  opacity: 0;
-  transform: translateY(5px);
-  transition: opacity 240ms ease, transform 240ms ease;
+  transition: opacity 240ms ease;
 }
-.folder-demo .row.in { opacity: 1; transform: none; }
+.folder-demo .rows { margin-top: 8px; flex: 1 1 auto; display: flex; flex-direction: column; }
+.folder-demo .row { opacity: 0; }
+.folder-demo .row.in { opacity: 1; }
 .folder-demo .badge {
   width: 20px; height: 20px; border-radius: 4px;
   border: var(--hair) solid var(--rule-strong);
@@ -436,52 +463,53 @@ footer a:hover { color: var(--ink); }
 .folder-demo .row.fetching .state,
 .folder-demo .row.ready .state { color: var(--signal); }
 
-/* 03 — their phone presses next, yours changes */
-.pass-demo .stage { display: grid; grid-template-columns: 1fr 62px 1fr; align-items: center; margin-top: 14px; }
+/* 03 — two phones and a signal, nothing to press */
+.pass-demo .stage {
+  margin-top: 8px;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 64px 1fr;
+  align-items: center;
+}
 .pass-demo .phone {
-  height: 150px;
+  height: 132px;
   border: var(--hair) solid var(--rule-strong);
   border-radius: 16px;
-  padding: 10px;
+  padding: 11px;
   background: #0b0b0b;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 8px;
 }
-.pass-demo .phone small { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-.pass-demo .now { display: flex; flex-direction: column; gap: 5px; }
-.pass-demo .now b { height: 6px; border-radius: 2px; background: rgba(237,237,237,0.55); transition: width 420ms ease; }
-.pass-demo .now .t1 { width: 44px; }
-.pass-demo .now .t2 { width: 30px; background: rgba(237,237,237,0.28); }
-.pass-demo .now .dim { background: rgba(237,237,237,0.2); }
-.pass-demo .pill {
-  align-self: flex-start;
-  border: var(--hair) solid var(--rule-strong);
-  border-radius: 999px;
-  padding: 5px 10px;
+.pass-demo .phone small {
   font-size: 10.5px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
-  opacity: 0;
-  transition: opacity 220ms ease, border-color 220ms ease, color 220ms ease, background 220ms ease;
 }
-.pass-demo .pill.show { opacity: 1; }
-.pass-demo .pill.ok { border-color: var(--signal); color: var(--signal); }
-.pass-demo .pill.press.active { background: var(--signal); border-color: var(--signal); color: var(--board); }
-.pass-demo .link { position: relative; height: 150px; }
+.pass-demo .bars { display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+.pass-demo .bars b {
+  height: 6px; border-radius: 2px;
+  background: rgba(237,237,237,0.55);
+  transition: background 260ms ease;
+}
+.pass-demo .bars b:first-child { width: 62%; }
+.pass-demo .bars b:last-child { width: 42%; }
+.pass-demo .bars.dim { margin-top: auto; }
+.pass-demo .bars.dim b { background: rgba(237,237,237,0.18); }
+.pass-demo .bars.lit b { background: var(--signal); }
+.pass-demo .link { position: relative; height: 132px; }
 .pass-demo .link svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .pass-demo .link path { stroke: rgba(237,237,237,0.3); stroke-width: 1; fill: none; stroke-dasharray: 3 4; }
-.pass-demo .chip {
-  position: absolute; top: 50%; left: 0;
-  transform: translate(0, -50%);
-  background: var(--signal); color: var(--board);
-  border-radius: 999px; padding: 4px 8px;
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
-  white-space: nowrap; opacity: 0;
+.pass-demo .pulse {
+  position: absolute; top: 50%; left: 4px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--signal);
+  transform: translateX(0) translateY(-50%);
+  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slot, .folder-demo .row, .folder-demo .badge, .pass-demo .chip, .pass-demo .pill,
-  .pass-demo .now b { transition: none; }
+  .slot .mark, .slot .name, .slot .state, .folder-demo .row, .folder-demo .badge,
+  .pass-demo .pulse, .pass-demo .bars b { transition: none; }
 }

@@ -23,55 +23,73 @@
     figure.appendChild(make('figcaption', 'cap', text));
   }
 
-  // 01 — the budget. Songs arrive newest-first; the oldest is evicted, and it says so.
+  // 01 — the budget. A fixed grid of rows; only their contents change, so nothing on the
+  // page moves while it runs. The bottom row is marked evicted, then everything above it
+  // takes the place of the row above, and a new song arrives at the top.
   function budget(figure) {
     figure.classList.add('budget-demo');
     var counter = head(figure, 'Phone storage', '448 MB of 448 MB');
     var slots = make('div', 'slots');
     figure.appendChild(slots);
-    var line = make('div', 'budgetline', 'budget');
-    figure.appendChild(line);
+    figure.appendChild(make('div', 'budgetline', 'budget'));
     caption(figure, 'Every play adds a song. When the budget is full, the oldest one leaves.');
 
-    var cap = 7, size = 64, seq = 0, onPhone = [];
+    var cap = 7, size = 64, seq = 0;
+    var rows = [];
 
-    function add() {
-      var slot = make('div', 'slot fresh');
-      slot.appendChild(make('div', 'mark'));
+    for (var i = 0; i < cap; i++) {
+      var row = make('div', 'slot');
+      row.appendChild(make('div', 'mark'));
       var text = make('div', 'slotText');
       var name = make('div', 'name');
-      name.style.width = (34 + ((seq * 19) % 50)) + '%';
       text.appendChild(name);
-      text.appendChild(make('div', 'state', seq === 0 ? 'playing' : 'on the phone'));
-      slot.appendChild(text);
-      slot.appendChild(make('span', 'size', size + ' MB'));
-      slots.insertBefore(slot, slots.firstChild);
-      requestAnimationFrame(function () { slot.classList.remove('fresh'); });
-      seq += 1;
-
-      // the song that was newest stops being newest; the new one is the one playing
-      if (onPhone[0]) {
-        onPhone[0].classList.remove('playing');
-        onPhone[0].querySelector('.state').textContent = 'on the phone';
-      }
-      slot.classList.add('playing');
-      onPhone.unshift(slot);
-
-      if (onPhone.length > cap) {
-        var victim = onPhone.pop();
-        victim.classList.add('out');
-        victim.querySelector('.state').textContent = 'evicted';
-        victim.querySelector('.size').textContent = '';
-        victim.querySelector('.name').style.width = '18%';
-        setTimeout(function (node) { if (node.parentNode) node.parentNode.removeChild(node); }, 420, victim);
-      }
-      counter.textContent = (onPhone.length * size) + ' MB of 448 MB';
+      text.appendChild(make('div', 'state', ''));
+      row.appendChild(text);
+      row.appendChild(make('span', 'size', size + ' MB'));
+      slots.appendChild(row);
+      rows.push(row);
     }
 
-    for (var i = 0; i < cap; i++) add();
+    function fill(row, width, state, sizeText, playing) {
+      row.querySelector('.name').style.width = width + '%';
+      row.querySelector('.state').textContent = state;
+      row.querySelector('.size').textContent = sizeText;
+      row.classList.toggle('playing', !!playing);
+    }
+
+    // start full: top row playing, the rest waiting
+    rows.forEach(function (row, i) {
+      fill(row, 34 + ((i * 19) % 50), i === 0 ? 'playing' : 'on the phone', size + ' MB', i === 0);
+    });
+
+    function copy(from, to) {
+      // only the top row is playing; everything below it is on the phone
+      fill(to,
+        parseFloat(from.querySelector('.name').style.width),
+        from.querySelector('.state').textContent === 'playing' ? 'on the phone' : from.querySelector('.state').textContent,
+        from.querySelector('.size').textContent,
+        false);
+    }
+
+    function tick() {
+      var last = rows[rows.length - 1];
+      last.classList.add('evicting');
+      fill(last, 18, 'evicted', '', false);
+
+      setTimeout(function () {
+        for (var i = rows.length - 1; i > 0; i--) copy(rows[i - 1], rows[i]);
+        seq += 1;
+        fill(rows[0], 34 + ((seq * 19) % 50), 'playing', size + ' MB', true);
+        rows[0].classList.add('enter');
+        setTimeout(function () { rows[0].classList.remove('enter'); }, 320);
+        last.classList.remove('evicting');
+        counter.textContent = (cap * size) + ' MB of 448 MB';
+      }, 420);
+    }
+
     var timer = null;
     return {
-      start: function () { if (!timer) timer = setInterval(add, 1400); },
+      start: function () { if (!timer) timer = setInterval(tick, 1500); },
       stop: function () { clearInterval(timer); timer = null; }
     };
   }
@@ -83,6 +101,8 @@
     caption(figure, 'Spine reads names, sizes and tags. A song is fetched only when you play it.');
 
     var titles = ['Opening Cut', 'Second Wind', 'Long Division', 'Half Light'];
+    var list = make('div', 'rows');
+    figure.appendChild(list);
     var rows = titles.map(function (title) {
       var row = make('div', 'row');
       var badge = make('div', 'badge');
@@ -90,7 +110,7 @@
       row.appendChild(badge);
       row.appendChild(make('span', 'title', title));
       row.appendChild(make('span', 'state', ''));
-      figure.appendChild(row);
+      list.appendChild(row);
       return row;
     });
 
@@ -138,7 +158,8 @@
     };
   }
 
-  // 03 — the passenger. Their phone presses next; the song changes on yours.
+  // 03 — the passenger. Two phones, and a signal going back and forth between them.
+  // Nothing to press: the point is the link, not a tutorial.
   function passenger(figure) {
     figure.classList.add('pass-demo');
     head(figure, 'Passenger', 'direct, no server');
@@ -146,60 +167,44 @@
 
     var stage = make('div', 'stage');
     var you = make('div', 'phone');
-    you.innerHTML =
-      '<small>Your phone</small>' +
-      '<div class="now"><b class="t1"></b><b class="t2"></b></div>' +
-      '<span class="pill ok">playing</span>';
+    you.innerHTML = '<small>Your phone</small>' +
+      '<div class="bars"><b></b><b></b></div><div class="bars dim"><b></b><b></b></div>';
     var link = make('div', 'link');
-    link.innerHTML =
-      '<svg viewBox="0 0 56 120" preserveAspectRatio="none" aria-hidden="true">' +
-      '<path d="M2 34 C 26 34, 30 60, 54 60"/>' +
-      '<path d="M2 86 C 26 86, 30 60, 54 60"/></svg>';
-    var chip = make('div', 'chip', 'next ›');
-    link.appendChild(chip);
+    link.innerHTML = '<svg viewBox="0 0 64 120" preserveAspectRatio="none" aria-hidden="true">' +
+      '<path d="M2 60 C 22 60, 42 60, 62 60"/></svg>';
+    var pulse = make('div', 'pulse');
+    link.appendChild(pulse);
     var them = make('div', 'phone right');
-    them.innerHTML =
-      '<small>Back seat</small>' +
-      '<div class="now"><b class="t1 dim"></b><b class="t2 dim"></b></div>' +
-      '<span class="pill press">press next</span>';
+    them.innerHTML = '<small>Back seat</small>' +
+      '<div class="bars"><b></b><b></b></div><div class="bars dim"><b></b><b></b></div>';
     stage.appendChild(you); stage.appendChild(link); stage.appendChild(them);
     figure.appendChild(stage);
 
-    var press = them.querySelector('.press');
-    var playing = you.querySelector('.pill');
-    var chipEl = chip;
-    var t1 = you.querySelector('.t1'), t2 = you.querySelector('.t2');
+    var theirBars = them.querySelector('.bars');
 
     function run() {
-      press.classList.remove('show', 'active');
-      playing.textContent = 'playing';
-      chipEl.style.transition = 'none';
-      chipEl.style.transform = 'translate(0px, -50%)';
-      chipEl.style.opacity = '0';
-      t1.style.width = '44px';
-      t2.style.width = '30px';
+      pulse.style.transition = 'none';
+      pulse.style.transform = 'translateX(0px)';
+      pulse.style.opacity = '0';
 
-      setTimeout(function () { press.classList.add('show'); }, 400);
-      setTimeout(function () { press.classList.add('active'); press.textContent = 'pressed'; }, 1500);
       setTimeout(function () {
-        chipEl.style.transition = 'transform 900ms cubic-bezier(.4,0,.2,1), opacity 200ms ease';
-        chipEl.style.opacity = '1';
-        chipEl.style.transform = 'translate(56px, -50%)';
-      }, 1800);
+        pulse.style.transition = 'transform 1100ms cubic-bezier(.45,0,.55,1), opacity 200ms ease';
+        pulse.style.opacity = '1';
+        pulse.style.transform = 'translateX(54px)';
+      }, 200);
+
+      setTimeout(function () { theirBars.classList.add('lit'); }, 1200);
       setTimeout(function () {
-        chipEl.style.opacity = '0';
-        t1.style.width = '58px';
-        t2.style.width = '38px';
-        playing.textContent = 'next song';
-        press.textContent = 'press next';
-        press.classList.remove('active');
-      }, 2900);
+        pulse.style.transition = 'transform 1100ms cubic-bezier(.45,0,.55,1), opacity 200ms ease';
+        pulse.style.transform = 'translateX(0px)';
+      }, 1900);
+      setTimeout(function () { pulse.style.opacity = '0'; theirBars.classList.remove('lit'); }, 2950);
     }
 
-    press.classList.add('show');
+    run();
     var timer = null;
     return {
-      start: function () { if (timer) return; run(); timer = setInterval(run, 5200); },
+      start: function () { if (timer) return; run(); timer = setInterval(run, 3600); },
       stop: function () { clearInterval(timer); timer = null; }
     };
   }
