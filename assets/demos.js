@@ -31,30 +31,33 @@
     figure.appendChild(slots);
     figure.appendChild(line);
 
-    var cap = 7, size = 64, used = 0, seq = 0;
+    var cap = 7, size = 64, seq = 0;
+    var onPhone = [];   // the rows currently counting against the budget
 
     function add() {
-      used += size;
       var slot = make('div', 'slot fresh');
       slot.appendChild(make('div', 'mark'));
-      slot.appendChild(make('div', 'name'));
+      var name = make('div', 'name');
+      name.style.width = (40 + ((seq * 17) % 45)) + '%';
+      slot.appendChild(name);
       slot.appendChild(make('span', 'size', size + ' MB'));
-      slot.querySelector('.name').style.width = (40 + ((seq * 17) % 45)) + '%';
       slots.insertBefore(slot, slots.firstChild);
-      seq += 1;
       requestAnimationFrame(function () { slot.classList.remove('fresh'); });
-      while (slots.children.length > cap) {
-        var victim = slots.lastElementChild;
-        used -= size;
+      seq += 1;
+      onPhone.unshift(slot);
+
+      // One overflow per arrival, and the victim leaves the budget immediately — the row
+      // only animates out afterwards. Looping on the DOM here was an infinite loop: the
+      // node stays a child until its transition ends, so the count never dropped.
+      if (onPhone.length > cap) {
+        var victim = onPhone.pop();
         victim.classList.add('out');
-        setTimeout(function (node) { if (node.parentNode) node.parentNode.removeChild(node); }, 280, victim);
+        setTimeout(function (node) { if (node.parentNode) node.parentNode.removeChild(node); }, 300, victim);
       }
-      used = Math.min(used, size * cap);
-      counter.textContent = used + ' MB';
+      counter.textContent = (onPhone.length * size) + ' MB';
     }
 
     for (var i = 0; i < cap; i++) add();
-    counter.textContent = used + ' MB';
     var timer = null;
     return {
       start: function () { if (!timer) timer = setInterval(add, 1100); },
