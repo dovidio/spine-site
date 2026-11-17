@@ -112,17 +112,16 @@ nav.top a:hover { color: var(--ink); }
   padding: 0 var(--gutter);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 46%);
-  grid-template-areas: "copy shot" "ledger shot";
-  grid-template-rows: auto 1fr;
-  align-items: start;
+  grid-template-areas: "copy shot";
+  grid-template-rows: auto;
+  align-items: center;
   column-gap: clamp(24px, 4vw, 64px);
   overflow: hidden;
 }
 .copy { grid-area: copy; }
 .hero-shot { grid-area: shot; }
-.ledger { grid-area: ledger; }
 .copy {
-  padding-top: clamp(56px, 12vh, 132px);
+  padding-top: 0;
   max-width: 40rem;
 }
 .eyebrow {
@@ -150,36 +149,14 @@ h1 em { font-style: normal; color: var(--signal); }
 }
 
 /* the ledger: one fact per line, signed the way a terminal signs one decision */
-.ledger {
-  margin: clamp(36px, 7vh, 78px) 0 0;
-  border-top: var(--hair) solid var(--rule-strong);
-  max-width: 40rem;
-}
-.ledger div {
-  display: grid;
-  grid-template-columns: 11rem 1fr;
-  gap: 18px;
-  padding: 13px 0;
-  border-bottom: var(--hair) solid var(--rule);
-  font-size: 15px;
-  color: var(--muted);
-}
-.ledger dt {
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding-top: 2px;
-}
-.ledger dd { margin: 0; text-wrap: pretty; }
 
 /* the capture, cropped by the viewport floor */
 .hero-shot {
   position: relative;
   justify-self: end;
   width: min(520px, 100%);
-  margin-top: clamp(40px, 8vh, 96px);
+  max-height: min(76svh, 720px);
+  margin-top: 0;
   border: var(--hair) solid var(--rule-strong);
   border-radius: 44px;
   overflow: hidden;
@@ -192,6 +169,8 @@ h1 em { font-style: normal; color: var(--signal); }
   width: 100%;
   height: auto;
 }
+
+/* the hero capture is taller than its box on purpose: the fold crops it */
 .hero-shot::after {
   content: "";
   position: absolute;
@@ -240,67 +219,17 @@ h2 {
   border: var(--hair) solid var(--rule-strong);
   border-radius: 30px;
   overflow: hidden;
-  aspect-ratio: 4 / 5;
 }
-/* a detail cropped from a real screen, never the whole phone stretched to fit */
+/* a detail cropped from a real screen: the crop is made in the asset, so the box
+   takes the image's own shape rather than cropping it a second time */
 .step-shot img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  height: auto;
 }
 .step:nth-of-type(even) .step-shot { justify-self: start; }
 
 /* the closed list: what it does not do */
-.not {
-  padding: clamp(56px, 9vh, 104px) var(--gutter);
-  border-top: var(--hair) solid var(--rule);
-}
-.not ul {
-  list-style: none;
-  margin: 28px 0 0;
-  padding: 0;
-  max-width: 52rem;
-}
-.not li {
-  display: grid;
-  grid-template-columns: 11rem 1fr;
-  gap: 18px;
-  padding: 13px 0;
-  border-top: var(--hair) solid var(--rule);
-  font-size: 15px;
-  color: var(--muted);
-}
-.not li s {
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  padding-top: 2px;
-}
-
-.status {
-  padding: clamp(48px, 8vh, 88px) var(--gutter);
-  border-top: var(--hair) solid var(--rule);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 40px;
-  align-items: baseline;
-  justify-content: space-between;
-}
-.status p { margin: 0; color: var(--muted); max-width: 34rem; }
-.dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--signal);
-  margin-right: 10px;
-  vertical-align: 1px;
-}
 
 footer {
   border-top: var(--hair) solid var(--rule);
@@ -368,23 +297,12 @@ footer a:hover { color: var(--ink); }
 
 /* ---- responsive ---- */
 /* the passenger gets a band of its own: no capture can show two phones */
-.band {
-  padding: clamp(48px, 8vh, 96px) var(--gutter);
-  border-top: var(--hair) solid var(--rule);
-  display: grid;
-  grid-template-columns: 11rem minmax(0, 1fr);
-  gap: clamp(18px, 3vw, 48px);
-  align-items: start;
-}
-.band .no { padding-top: 6px; }
-.band p { margin: 0; color: var(--muted); max-width: 44rem; text-wrap: pretty; }
-.band strong { color: var(--ink); font-weight: 700; }
 
 @media (max-width: 900px) {
   .plate-hero {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "copy" "shot" "ledger";
-    grid-template-rows: auto auto auto;
+    grid-template-areas: "copy" "shot";
+    grid-template-rows: auto auto;
     min-height: 0;
   }
   .copy { padding-top: 48px; }
@@ -400,7 +318,6 @@ footer a:hover { color: var(--ink); }
   .step, .step:nth-of-type(even) { grid-template-columns: minmax(0, 1fr); }
   .step:nth-of-type(even) .step-copy { order: 0; }
   .step-shot, .step:nth-of-type(even) .step-shot { justify-self: stretch; width: 100%; }
-  .ledger div, .not li, .band { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .doc-split { grid-template-columns: minmax(0, 1fr); }
   .doc-index { position: static; order: -1; }
 }

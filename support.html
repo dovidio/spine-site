@@ -26,7 +26,8 @@
   <p class="meta">iCloud Music Player</p>
 
   <h2 id="where-does-my-music-go">Where does my music go?</h2>
-  <p>Nowhere. Spine plays the folder you choose in iCloud Drive, in place. It does not copy files into the app, rename them, move them, upload them, or send them anywhere. If you delete the app, your library is exactly as you left it — the app's own downloads are the only thing that goes.</p>
+  <p>Your originals never move. Spine plays the folder you choose in iCloud Drive in place: it does not rename, move, upload or otherwise modify anything in it, and deleting the app leaves your library exactly as you left it.</p>
+  <p>To play a song, Spine fetches a copy of that file into its own storage — that is what lets playback start before an album has finished downloading. Those copies are the only thing the storage budget governs, and the only thing that leaves when you delete the app or press "Remove all downloads".</p>
 
   <h2 id="how-do-i-start">How do I start?</h2>
   <ul>
@@ -39,7 +40,7 @@
   <p>FLAC, WAV, AIFF, ALAC, M4A, MP3 and AAC, in any subfolder. Anything else is listed as unplayable rather than silently skipped, so a folder that shows nothing is telling you the truth.</p>
 
   <h2 id="why-is-it-downloading-things">Why is it downloading things?</h2>
-  <p>A file in iCloud Drive that has never been opened is a placeholder: it has a name and a size, not audio. Spine fetches a track when you press play, and stops there. It also fetches the next few songs ahead of time when your settings allow it.</p>
+  <p>A file in iCloud Drive that has never been opened is a placeholder: it has a name and a size, not audio. Spine fetches a track when you press play — a real copy, which is why the next play of that song is instant — and it fetches the next few songs ahead of time when your settings allow it.</p>
 
   <h2 id="what-does-the-storage-budget-do">What does the storage budget do?</h2>
   <p>It is the ceiling you set for what Spine may keep on the phone. When the downloads pass it, the least recently played files are evicted from the device — the originals stay in iCloud Drive and come back the next time you play them. The song you are listening to, and the ones queued behind it, are never evicted.</p>
