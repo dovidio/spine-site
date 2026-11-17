@@ -55,7 +55,11 @@
 
     for (var i = 0; i < cap; i++) add();
     counter.textContent = used + ' MB';
-    return { start: function () { setInterval(add, 1100); } };
+    var timer = null;
+    return {
+      start: function () { if (!timer) timer = setInterval(add, 1100); },
+      stop: function () { clearInterval(timer); timer = null; }
+    };
   }
 
   // 02 — the folder: names and sizes first, then audio only for what is played.
@@ -99,7 +103,11 @@
     // The first paint is the whole story in miniature: every name read, the played one fetched.
     rows.forEach(function (row) { row.classList.add('in'); });
     rows[0].classList.add('ready');
-    return { start: function () { run(); setInterval(run, 6200); } };
+    var timer = null;
+    return {
+      start: function () { if (timer) return; run(); timer = setInterval(run, 6200); },
+      stop: function () { clearInterval(timer); timer = null; }
+    };
   }
 
   // 03 — the passenger: approval travels one way, the next song travels back.
@@ -160,15 +168,36 @@
     ask.textContent = 'approved';
     send.classList.add('show');
     bar.style.width = '62%';
-    return { start: function () { run(); setInterval(run, 5200); } };
+    var timer = null;
+    return {
+      start: function () { if (timer) return; run(); timer = setInterval(run, 5200); },
+      stop: function () { clearInterval(timer); timer = null; }
+    };
   }
 
   var builders = { budget: budget, folder: folder, passenger: passenger };
 
+  var loops = [];
   document.querySelectorAll('.demo').forEach(function (figure) {
     var build = builders[figure.dataset.demo];
     if (!build) return;
-    var loop = build(figure);
-    if (!reduce) loop.start();
+    loops.push({ figure: figure, loop: build(figure) });
   });
+
+  // Reduced motion: the stills are the whole story, nothing runs at all.
+  if (reduce) return;
+
+  // Otherwise animate only while the drawing is on screen. An off-screen page should not
+  // spend a phone's battery drawing a diagram nobody is looking at.
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      loops.forEach(function (pair) {
+        if (pair.figure !== entry.target) return;
+        if (entry.isIntersecting) pair.loop.start();
+        else pair.loop.stop();
+      });
+    });
+  }, { rootMargin: '80px' });
+
+  loops.forEach(function (pair) { observer.observe(pair.figure); });
 })();
